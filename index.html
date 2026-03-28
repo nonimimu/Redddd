@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonioaey Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;800&family=Mitr:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #1a0b2e;
+            --primary-purple: #9d77e9;
+            --soft-pink: #fbcfe8;
+            --spirit-blue: #a5f3fc;
+            --glass-base: rgba(147, 112, 219, 0.15); /* More purple-tinted base */
+            --glass-inner-base: rgba(147, 112, 219, 0.1);
+            --glass-inner-hover: rgba(147, 112, 219, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* Cosmic Purple Gradient to match image_1 */
+            background: linear-gradient(135deg, #2e1065 0%, #4c1d95 35%, #1e1b4b 70%, #171717 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* เอฟเฟกต์เมฆและละอองฟุ้งๆ */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, rgba(165, 243, 252, 0.15), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(251, 207, 232, 0.1), transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glassmorphism for containers */
+        .glass-container {
+            background: var(--glass-base);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Highly Refractive Glass Card */
+        .glass-card {
+            background: var(--glass-base);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            /* Refractive edge effect from image_4 */
+            position: relative;
+        }
+        
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            border: 2px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1) 40%, transparent 60%, rgba(255,255,255,0.2) 80%, rgba(255,255,255,0.4) 100%);
+            pointer-events: none;
+        }
+
+        /* Clear, cold glass inner blocks */
+        .glass-inner {
+            background: rgba(255, 255, 255, 0.05); /* very clear */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-inner:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* อนิเมชั่นลอยๆ เหมือนในรูป */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* ฟอนต์หัวข้ออ่านง่ายแต่มีความน่ารัก และทำตัวหนา */
+        h1, h2 { font-family: 'Mitr', sans-serif; font-weight: 600 !important; }
+
+        .btn-copy {
+            background: linear-gradient(90deg, #9d77e9, #fbcfe8);
+            color: #1a0b2e;
+            font-weight: 800; /* Extra bold copy text */
+            transition: all 0.2s;
+            font-family: 'Prompt', sans-serif;
+        }
+        .btn-copy:active { transform: scale(0.95); }
+
+        /* การไล่สีตัวอักษรสำหรับหัวข้อหลัก */
+        .text-gradient {
+            background: linear-gradient(to bottom, #fff 30%, #fbcfe8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-4">
+    <div class="bg-glow"></div>
+
+    <div id="toast" class="fixed top-5 z-50 bg-white/90 text-purple-900 px-6 py-2 rounded-full font-bold shadow-lg opacity-0 transition-all pointer-events-none">
+        คัดลอกสำเร็จแล้ว ✨
+    </div>
+
+    <main class="max-w-6xl w-full relative z-10 flex flex-col md:flex-row gap-8 items-start">
+        
+        <div class="w-full md:w-[320px] flex flex-col gap-8">
+            <div class="glass-card p-6 border-b-4 border-pink-400/30">
+                <h2 class="text-xl md:text-2xl text-pink-100 mb-2">
+                    ⚠️ อย่าลืมโน๊ตสลิปกันนะคะ
+                </h2>
+                <p class="text-base text-blue-100/90 leading-relaxed">
+                    หากลืมโน๊ตสลิป โอนมาใหม่ <span class="text-pink-300 font-extrabold text-lg">0.1</span> พร้อมโน๊ตสลิปด้วยนะคะ
+                </p>
+            </div>
+
+            <div class="glass-card p-2 aspect-[3/4] overflow-hidden flex items-center justify-center">
+                <p class="text-pink-200 text-sm font-light text-center px-4">กรอบตัวละคร 1<br>(Portrait)</p>
+                </div>
+        </div>
+
+        <div class="w-full md:flex-1 glass-card p-8 space-y-8 flex flex-col items-center">
+            
+            <div class="relative text-center mb-8 floating">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gradient mb-3 tracking-wider">
+                    Nonioaey Payment
+                </h1>
+                <div class="max-w-xs mx-auto text-base text-pink-200 opacity-80 border-t border-white/20 pt-3">
+                    2026 SEASON 2 • SPIRIT BLOSSOM
+                </div>
+            </div>
+
+            <div class="glass-container p-3 w-full max-w-lg aspect-[16/9] overflow-hidden">
+                <div class="w-full h-full rounded-[22px] bg-indigo-950 flex items-center justify-center border border-white/10">
+                    <p class="text-pink-200 text-sm font-light text-center px-4">ช่องใส่ภาพตัวละคร<br>(Landscape Banner)</p>
+                </div>
+            </div>
+
+            <div class="w-full max-w-lg space-y-6">
+                <div class="text-center mb-5">
+                    <span class="text-xs uppercase tracking-[0.3em] text-blue-300 font-semibold">Account Owner</span>
+                    <p class="text-2xl font-extrabold text-white">ศศิกานต์ น้ำเขียว</p>
+                </div>
+
+                <div class="glass-inner p-4 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-1">
+                        <div class="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-400/20">
+                            <span class="text-green-400 font-bold text-sm">K+</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] text-gray-400 uppercase font-semibold">Kasikorn Bank</p>
+                            <p id="acc1" class="text-xl font-mono font-extrabold tracking-wide">131-1-45867-8</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('1311458678')" class="btn-copy px-6 py-2 rounded-full text-sm flex-shrink-0">
+                        Copy
+                    </button>
+                </div>
+
+                <div class="glass-inner p-4 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4 flex-1">
+                        <div class="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center border border-orange-400/20">
+                            <span class="text-orange-400 font-bold text-sm">W</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] text-gray-400 uppercase font-semibold">TrueMoney Wallet</p>
+                            <p id="acc2" class="text-xl font-mono font-extrabold tracking-wide">082-634-8896</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('0826348896')" class="btn-copy px-6 py-2 rounded-full text-sm flex-shrink-0">
+                        Copy
+                    </button>
+                </div>
+
+                <a href="https://tmn.app.link/nEoPnxQ9R1b" target="_blank" class="block text-center text-sm text-blue-300 hover:text-pink-300 transition-colors underline decoration-dotted font-medium">
+                    คลิกเพื่อโอนผ่านลิงก์ Wallet
+                </a>
+            </div>
+
+            <div class="w-full max-w-lg text-center px-6 py-3 bg-white/5 glass-inner border border-white/10 rounded-full">
+                <p class="text-base text-pink-200 font-medium">
+                    ✨ โอนเเล้วส่งสลิปไว้ได้ในเเชทเลยค่ะ ✨
+                </p>
+            </div>
+
+        </div>
+
+        <div class="w-full md:w-[320px] flex flex-col gap-8">
+             <div class="glass-card p-2 aspect-[3/4] overflow-hidden flex items-center justify-center order-first md:order-none">
+                <p class="text-pink-200 text-sm font-light text-center px-4">กรอบตัวละคร 2<br>(Portrait)</p>
+                 </div>
+
+            <div class="glass-card p-6">
+                <h3 class="text-center text-base font-semibold mb-5 text-blue-200">📱 ช่องทางติดต่อ</h3>
+                <div class="flex flex-col gap-4">
+                    <a href="https://www.facebook.com/profile.php?id=61554192600355" target="_blank" class="glass-inner p-4 text-center text-sm flex items-center justify-center gap-2 group">
+                        <span class="text-blue-400 font-extrabold group-hover:text-blue-300">Facebook</span>
+                    </a>
+                    <a href="https://line.me/ti/p/LfBtdhlrVa" target="_blank" class="glass-inner p-4 text-center text-sm flex items-center justify-center gap-2 group">
+                        <span class="text-green-400 font-extrabold group-hover:text-green-300">Line</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass-card p-2 aspect-[1/1] overflow-hidden flex items-center justify-center">
+                 <p class="text-pink-200 text-sm font-light text-center px-4">กรอบตัวละคร 3<br>(Square)</p>
+                 </div>
+        </div>
+
+    </main>
+    
+    <footer class="max-w-6xl w-full text-center text-[12px] text-white/40 mt-12 pb-10">
+        © 2026 Nonioaey Payment • All Rights Reserved
+    </footer>
+
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(0px)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
